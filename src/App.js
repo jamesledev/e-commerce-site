@@ -1,3 +1,4 @@
+import './App.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
@@ -7,15 +8,29 @@ import { Products, Navbar, Cart, Checkout } from './components';
 const App = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+  const [notWorking, setnotWorking] = useState([]);
 
   const fetchProducts = async () => {
-    const { data } = await commerce.products.list();
+    try {
+      const { data } = await commerce.products.list();
 
-    setProducts(data);
+      setProducts(data);
+    } catch (error) {
+      const { notWorking } = 'notWorking';
+      console.log(error);
+      console.log('Commerce.js currently down');
+      setnotWorking(notWorking);
+    }
   };
 
   const fetchCart = async () => {
-    setCart(await commerce.cart.retrieve());
+    try {
+      setCart(await commerce.cart.retrieve());
+    } catch (error) {
+      console.log(
+        'I am sorry for this... Please check their twitter for the current status of Commerce.js'
+      );
+    }
   };
 
   const handleAddToCart = async (productId, quantity) => {
@@ -47,7 +62,6 @@ const App = () => {
     fetchCart();
   }, []);
 
-  // console.log(cart);
   return (
     <Router>
       <div>
@@ -68,6 +82,11 @@ const App = () => {
             <Checkout cart={cart} />
           </Route>
         </Switch>
+      </div>
+      <div className="invis">
+        <div className={notWorking}>
+          Made on Commerce.js, if no data, error message will print to console.
+        </div>
       </div>
     </Router>
   );
