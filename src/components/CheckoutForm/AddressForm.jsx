@@ -27,7 +27,7 @@ const AddressForm = ({checkoutToken, next}) => {
   
     setShippingCountries(countries);
     setShippingCountry(Object.keys(countries)[0])
-    // as its an object not arrau
+    // as its an object not array
   }
   const fetchSubdivisions = async (countryCode) => {
     const {subdivisions} = await commerce.services.localeListSubdivisions(countryCode);
@@ -43,17 +43,18 @@ const AddressForm = ({checkoutToken, next}) => {
   }
 
   useEffect(() => {
+
     fetchShippingCountries(checkoutToken.id)
-  }, [])
+  }, [checkoutToken.id]);
 
   useEffect(() => {
-    if(shippingCountry) fetchSubdivisions(shippingCountry)
-  }, [shippingCountry])
+    if (shippingCountry) fetchSubdivisions(shippingCountry)
+  }, [shippingCountry]);
 // in the [] is a dependency
 
 useEffect(() => {
-  if(shippingSubdivision) fetchShippingOptions(checkoutToken.id, shippingCountry, shippingSubdivision)
-}, [shippingSubdivision])
+  if (shippingSubdivision) fetchShippingOptions(checkoutToken.id, shippingCountry, shippingSubdivision)
+}, [shippingSubdivision, checkoutToken.id, shippingCountry]);
 
   return (
     <>
